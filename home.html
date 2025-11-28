@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Bean Haven</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F5F5DC;
+            color: #5D4037;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: #5D4037;
+            padding: 20px 0;
+            box-shadow: 0 2px 15px rgba(93, 64, 55, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #D7CCC8;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logo:hover {
+            color: #FFFFFF;
+            transform: scale(1.05);
+        }
+
+        /* Logo  */
+        .logo-img {
+            height: 100px;
+            width: auto;
+            transition: all 0.3s ease;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo:hover .logo-img {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #8D6E63;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid #8D6E63;
+            background: #D7CCC8;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            background: #5D4037;
+            color: #FFFFFF;
+            border-color: #5D4037;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(93, 64, 55, 0.8), rgba(93, 64, 55, 0.9)), url('img/coffee-hero.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards 0.8s;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #D7CCC8;
+            color: #5D4037;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: 2px solid #D7CCC8;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards 1.1s;
+        }
+
+        .cta-button:hover {
+            background: transparent;
+            color: #D7CCC8;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 輪播圖樣式 */
+        .carousel-section {
+            padding: 60px 20px;
+            background: #F5F5DC;
+        }
+
+        .carousel-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .carousel {
+            position: relative;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            cursor: pointer;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(93, 64, 55, 0.9));
+            color: white;
+            padding: 40px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease 0.3s;
+        }
+
+        .carousel-slide.active .slide-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .slide-content h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .slide-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #8D6E63;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #5D4037;
+            transform: scale(1.2);
+        }
+
+        .dot:hover {
+            background: #5D4037;
+        }
+
+        /* 特色區域樣式 */
+        .features-section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #5D4037;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #5D4037;
+        }
+
+        .feature-description {
+            color: #8D6E63;
+            line-height: 1.6;
+        }
+
+        /* 關於我們樣式 */
+        .about-section {
+            background: #5D4037;
+            color: white;
+            padding: 80px 20px;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .about-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .social-media {
+            margin-top: 30px;
+        }
+
+        .social-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #D7CCC8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background: #D7CCC8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #5D4037;
+        }
+
+        .social-icon:hover {
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .about-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .footer-contact {
+            background: #5D4037;
+            padding: 50px 20px;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .contact-card {
+            background: #D7CCC8;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-color: #8D6E63;
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #5D4037;
+        }
+
+        .contact-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #5D4037;
+            font-size: 1.2rem;
+        }
+
+        .contact-detail {
+            color: #5D4037;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+
+        .cart-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #5D4037;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .cart-icon:hover {
+            background: #8B4513;
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container,
+            .features-grid,
+            .about-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+            
+            .nav-links a {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+            
+            .carousel {
+                height: 300px;
+            }
+            
+            .slide-content {
+                padding: 20px;
+            }
+            
+            .slide-content h3 {
+                font-size: 1.5rem;
+            }
+            
+            .social-icons {
+                justify-content: center;
+            }
+            
+            .logo {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .logo-img {
+                height: 40px;
+            }
+            
+            .logo-text {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-icon" onclick="goToCart()">
+        🛒
+        <div class="cart-count" id="cart-count">0</div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo" onclick="goToHome()">
+            <img src="images/logo.png" alt="Bean Haven" class="logo-img" 
+                 onerror="this.style.display='none'; document.getElementById('logo-emoji').style.display='block';">
+            <span id="logo-emoji" style="display: none; font-size: 2.5rem;">☕</span>
+            <span class="logo-text">Bean Haven</span>
+        </div>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="product.html">Products</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to Bean Haven</h1>
+            <p>Discover the finest coffee experience with our carefully selected beans from around the world. Every cup tells a story of passion and quality.</p>
+            <a href="product.html" class="cta-button">Explore Our Coffee</a>
+        </div>
+    </section>
+        <!-- banna,圖片係網上直接用 -->
+    <section class="carousel-section">
+        <div class="carousel-container">
+            <div class="carousel">
+                <div class="carousel-slide active" onclick="goToProducts()">
+                    <img src="img/carousel1.jpg" alt="Premium Coffee Beans" onerror="this.src='https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=800&q=80'">
+                    <div class="slide-content">
+                        <h3>Premium Coffee Beans</h3>
+                        <p>Discover our exclusive selection of single-origin beans</p>
+                    </div>
+                </div>
+                <div class="carousel-slide" onclick="goToProducts()">
+                    <img src="img/carousel2.jpg" alt="Brewing Equipment" onerror="this.src='https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?w=800&q=80'">
+                    <div class="slide-content">
+                        <h3>Brewing Equipment</h3>
+                        <p>Professional tools for the perfect coffee experience</p>
+                    </div>
+                </div>
+                <div class="carousel-slide" onclick="goToProducts()">
+                    <img src="img/carousel3.jpg" alt="Coffee Blends" onerror="this.src='https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800&q=80'">
+                    <div class="slide-content">
+                        <h3>Signature Blends</h3>
+                        <p>Expertly crafted blends for every taste preference</p>
+                    </div>
+                </div>
+                <div class="carousel-slide" onclick="goToProducts()">
+                    <img src="img/carousel4.jpg" alt="Coffee Accessories" onerror="this.src='https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80'">
+                    <div class="slide-content">
+                        <h3>Coffee Accessories</h3>
+                        <p>Complete your coffee setup with our premium accessories</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-dots">
+                <div class="dot active" onclick="currentSlide(0)"></div>
+                <div class="dot" onclick="currentSlide(1)"></div>
+                <div class="dot" onclick="currentSlide(2)"></div>
+                <div class="dot" onclick="currentSlide(3)"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <h2 class="section-title">Why Choose Bean Haven?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👨🏻‍🎓</div>
+                <h3 class="feature-title">Student-Powered Quality</h3>
+                <p class="feature-description">Tasted and inspected by a team of university students, ensuring only the finest coffee flavor for you.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">☕</div>
+                <h3 class="feature-title">Global Coffee Journey</h3>
+                <p class="feature-description">Tasted and inspected by a team of university students, ensuring only the finest coffee flavor for you.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🐈</div>
+                <h3 class="feature-title">Coffee with Cause</h3>
+                <p class="feature-description">5% of every purchase is donated to stray cat rescue, allowing you to spread warmth while enjoying your coffee.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="about-container">
+            <div class="about-content">
+                <h2>Our Story</h2>
+                <p>Bean Haven is a shop founded by a group of university friends who love coffee and are concerned about stray animal welfare. As students, we wanted to create something meaningful, combining our passion and sense of mission. We travel the world in search of unique coffee beans, bringing diverse flavors to Hong Kong's vibrant coffee culture.
+
+For every bag of coffee beans sold, we donate 5% of the proceeds directly to local stray cat rescue organizations, providing them with food, medical care, and shelter. We believe that a good cup of coffee should not only please your senses but also have a positive impact. From campus to the coffee cup in your hand, we brew change with every bag of coffee beans.
+                
+                <div class="social-media">
+                    <div class="social-title">Follow Our Journey</div>
+                    <div class="social-icons">
+                        <a href="https://facebook.com" target="_blank" class="social-icon">📘</a>
+                        <a href="https://instagram.com" target="_blank" class="social-icon">📷</a>
+                        <a href="https://twitter.com" target="_blank" class="social-icon">🐦</a>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="img/coffee-shop.jpg" alt="Bean Haven Coffee Shop" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </section>
+            <!-- 底卡 -->
+    <div id="contact" class="footer-contact">
+        <div class="contact-container">
+
+            <div class="contact-card" onclick="sendEmail()">
+                <div class="contact-icon">📧</div>
+                <div class="contact-title">Email Us</div>
+                <div class="contact-detail">hello@beanhaven.com</div>
+            </div>
+
+            <div class="contact-card" onclick="openMap()">
+                <div class="contact-icon">🏪</div>
+                <div class="contact-title">Visit Us</div>
+                <div class="contact-detail">
+                    123 Coffee Street<br>
+                    Central District<br>
+                    Hong Kong
+                </div>
+            </div>
+            
+            <div class="contact-card phone-card" onclick="copyPhoneNumber()">
+                <div class="contact-icon">📞</div>
+                <div class="contact-title">Call Us</div>
+                <div class="contact-detail">+852 1234 5678</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        function goToHome() {
+            window.location.href = 'home.html';
+        }
+
+        function goToCart() {
+            window.location.href = 'cart.html';
+        }
+
+        function goToProducts() {
+            window.location.href = 'product.html';
+        }
+
+        async function updateCartCount() {
+            try {
+                const response = await fetch('get_cart.php');
+                const result = await response.json();
+                
+                if (result && Array.isArray(result.cart_items)) {
+                    const totalItems = result.cart_items.reduce((total, item) => total + parseInt(item.qty), 0);
+                    document.getElementById('cart-count').textContent = totalItems;
+                } else {
+                    document.getElementById('cart-count').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+                document.getElementById('cart-count').textContent = '0';
+            }
+        }
+
+        let currentSlideIndex = 0;
+        let slideInterval;
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            if (index >= slides.length) currentSlideIndex = 0;
+            if (index < 0) currentSlideIndex = slides.length - 1;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[currentSlideIndex].classList.add('active');
+            dots[currentSlideIndex].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlideIndex++;
+            showSlide(currentSlideIndex);
+        }
+
+        function currentSlide(index) {
+            currentSlideIndex = index;
+            showSlide(currentSlideIndex);
+            resetInterval();
+        }
+
+        function startSlideShow() {
+            slideInterval = setInterval(nextSlide, 3000);
+        }
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            startSlideShow();
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = isError ? '#dc3545' : '#28a745';
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function sendEmail() {
+            window.location.href = 'mailto:hello@beanhaven.com?subject=Inquiry from Bean Haven Website';
+        }
+        
+        function openMap() {
+            const address = '123+Coffee+Street+Central+District+Hong+Kong';
+            window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
+        }
+        /*複製電話*/
+        async function copyPhoneNumber() {
+            const phoneNumber = '+852 1234 5678';
+            try {
+                await navigator.clipboard.writeText(phoneNumber);
+                showToast('Phone number copied to clipboard!');
+            } catch (err) {
+                const textArea = document.createElement('textarea');
+                textArea.value = phoneNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Phone number copied to clipboard!');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            startSlideShow();
+            
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Bean Haven</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F5F5DC;
+            color: #5D4037;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: #5D4037;
+            padding: 20px 0;
+            box-shadow: 0 2px 15px rgba(93, 64, 55, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #D7CCC8;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logo:hover {
+            color: #FFFFFF;
+            transform: scale(1.05);
+        }
+
+        /* Logo  */
+        .logo-img {
+            height: 100px;
+            width: auto;
+            transition: all 0.3s ease;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo:hover .logo-img {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #8D6E63;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid #8D6E63;
+            background: #D7CCC8;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            background: #5D4037;
+            color: #FFFFFF;
+            border-color: #5D4037;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .product-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .product-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 380px;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .product-name {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #5D4037;
+            height: 40px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .product-description {
+            color: #8D6E63;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            font-size: 0.9rem;
+            flex-grow: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .product-price {
+            color: #8B4513;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        
+        .quantity-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .quantity-label {
+            font-weight: bold;
+            color: #5D4037;
+            font-size: 0.9rem;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .quantity-btn:hover {
+            background: #f0f0f0;
+            border-color: #8B4513;
+        }
+        
+        .quantity-input {
+            width: 50px;
+            height: 30px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #5D4037;
+        }
+        
+        .quantity-input:focus {
+            outline: none;
+            border-color: #8B4513;
+            box-shadow: 0 0 5px rgba(139, 69, 19, 0.3);
+        }
+        
+        .add-to-cart-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .add-to-cart-btn:hover {
+            background: #1e7e34;
+            transform: translateY(-2px);
+        }
+        
+        .add-to-cart-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .result-container.success {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .result-container.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .cart-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #5D4037;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .cart-icon:hover {
+            background: #8B4513;
+            transform: scale(1.1);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .footer-contact {
+            background: #5D4037;
+            padding: 50px 20px;
+            margin-top: 60px;
+        }
+        
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .contact-card {
+            background: #D7CCC8;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-color: #8D6E63;
+        }
+        
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #5D4037;
+        }
+        
+        .contact-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #5D4037;
+            font-size: 1.2rem;
+        }
+        
+        .contact-detail {
+            color: #5D4037;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+            
+            .nav-links a {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-card {
+                height: auto;
+                min-height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-icon" onclick="goToCart()">
+        🛒
+        <div class="cart-count" id="cart-count">0</div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo" onclick="goToHome()">
+            <img src="images/logo.png" alt="Bean Haven" class="logo-img" 
+                 onerror="this.style.display='none'; document.getElementById('logo-emoji').style.display='block';">
+            <span id="logo-emoji" style="display: none; font-size: 2.5rem;">☕</span>
+            <span class="logo-text">Bean Haven</span>
+        </div>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="#" onclick="loadProducts('classic'); return false;">Classic Series</a>
+            <a href="#" onclick="loadProducts('blend'); return false;">Blend Series</a>
+            <a href="#" onclick="loadProducts('flavor'); return false;">Flavor Series</a>
+        </div>
+    </nav>
+
+    <div class="product-container">
+        <div id="product-list" class="product-grid">
+        </div>
+        
+        <div id="result" class="result-container">
+        </div>
+    </div>
+
+    <div class="footer-contact">
+        <div class="contact-container">
+            <div class="contact-card" onclick="sendEmail()">
+                <div class="contact-icon">📧</div>
+                <div class="contact-title">Email Us</div>
+                <div class="contact-detail">hello@beanhaven.com</div>
+            </div>
+            
+            <div class="contact-card" onclick="openMap()">
+                <div class="contact-icon">🏪</div>
+                <div class="contact-title">Visit Us</div>
+                <div class="contact-detail">
+                    123 Coffee Street<br>
+                    Central District<br>
+                    Hong Kong
+                </div>
+            </div>
+            
+            <div class="contact-card phone-card" onclick="copyPhoneNumber()">
+                <div class="contact-icon">📞</div>
+                <div class="contact-title">Call Us</div>
+                <div class="contact-detail">+852 1234 5678</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        function goToHome() {
+            window.location.href = 'home.html';
+        }
+
+        function goToCart() {
+            window.location.href = 'cart.html';
+        }
+        async function updateCartCount() {
+            try {
+                const response = await fetch('get_cart.php');
+                const result = await response.json();
+                
+                if (result && Array.isArray(result.cart_items)) {
+                    const totalItems = result.cart_items.reduce((total, item) => total + parseInt(item.qty), 0);
+                    document.getElementById('cart-count').textContent = totalItems;
+                } else {
+                    document.getElementById('cart-count').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+                document.getElementById('cart-count').textContent = '0';
+            }
+        }
+
+        async function loadProducts(category) {
+            try {
+                document.getElementById('result').innerHTML = 'Loading...';
+                document.getElementById('result').className = 'result-container';
+                
+                const response = await fetch(`get_products.php?category=${category}`);
+                const products = await response.json();
+                
+                let html = '';
+                if (products.length === 0) {
+                    html = '<div class="empty-cart"><h3>No products found</h3><p>Please try another category.</p></div>';
+                } else {
+                    products.forEach(product => {
+                        html += `
+                            <div class="product-card">
+                                <img src="images/${product.image_url || 'default.jpg'}" alt="${product.name}" class="product-image" onerror="this.src='images/default.jpg'">
+                                <h3 class="product-name">${product.name}</h3>
+                                <p class="product-description">${product.description}</p>
+                                <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
+                                
+                                <div class="quantity-section">
+                                    <span class="quantity-label">Quantity:</span>
+                                    <div class="quantity-controls">
+                                        <button class="quantity-btn" onclick="decreaseQuantity('${product.id}')">-</button>
+                                        <input type="number" class="quantity-input" id="quantity-${product.id}" value="1" min="1" max="99" onchange="validateQuantity('${product.id}')">
+                                        <button class="quantity-btn" onclick="increaseQuantity('${product.id}')">+</button>
+                                    </div>
+                                </div>
+                                
+                                <button class="add-to-cart-btn" onclick="addToCart('${product.id}', '${product.name.replace(/'/g, "\\'")}', '${product.price}')">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        `;
+                    });
+                }
+                
+                document.getElementById('product-list').innerHTML = html;
+                document.getElementById('result').innerHTML = `<strong>Success!</strong> Loaded ${products.length} products from ${category} series.`;
+                document.getElementById('result').className = 'result-container success';
+                
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<strong>Error:</strong> ${error}`;
+                document.getElementById('result').className = 'result-container error';
+            }
+        }
+
+        function increaseQuantity(productId) {
+            const input = document.getElementById(`quantity-${productId}`);
+            let value = parseInt(input.value) || 1;
+            if (value < 99) {
+                input.value = value + 1;
+            }
+        }
+
+        function decreaseQuantity(productId) {
+            const input = document.getElementById(`quantity-${productId}`);
+            let value = parseInt(input.value) || 1;
+            if (value > 1) {
+                input.value = value - 1;
+            }
+        }
+
+        function validateQuantity(productId) {
+            const input = document.getElementById(`quantity-${productId}`);
+            let value = parseInt(input.value) || 1;
+            
+            if (value < 1) {
+                input.value = 1;
+            } else if (value > 99) {
+                input.value = 99;
+            }
+        }
+        async function addToCart(productId, productName, productPrice) {
+            try {
+                const quantity = parseInt(document.getElementById(`quantity-${productId}`).value) || 1;
+                
+                let successCount = 0;
+                //我偷懶 直接有幾多就調用幾次
+                for (let i = 0; i < quantity; i++) {
+                    const formData = new FormData();
+                    formData.append('product_id', productId);
+                    formData.append('product_name', productName);
+                    formData.append('product_price', productPrice);
+                    
+                    const response = await fetch('add_to_cart.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        successCount++;
+                    } else {
+                        throw new Error(result.message);
+                    }
+                }
+                
+                await updateCartCount();
+                
+                if (successCount === quantity) {
+                    showToast(`Added: ${quantity} product(s) to cart`);
+                } else {
+                    showToast(`part of product added in cart: ${successCount}/${quantity} `, true);
+                }
+                
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                showToast('Error adding to cart', true);
+            }
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = isError ? '#dc3545' : '#28a745';
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function sendEmail() {
+            window.location.href = 'mailto:hello@beanhaven.com?subject=Inquiry from Bean Haven Website';
+        }
+        
+        function openMap() {
+            const address = '123+Coffee+Street+Central+District+Hong+Kong';
+            window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
+        }
+        
+        async function copyPhoneNumber() {
+            const phoneNumber = '+852 1234 5678';
+            try {
+                await navigator.clipboard.writeText(phoneNumber);
+                showToast('Phone number copied to clipboard!');
+            } catch (err) {
+                const textArea = document.createElement('textarea');
+                textArea.value = phoneNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Phone number copied to clipboard!');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts('classic');
+            updateCartCount(); 
+        });
+    </script>
+</body>
+</html>

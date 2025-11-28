@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Complete - Bean Haven</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F5F5DC;
+            color: #5D4037;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: #5D4037;
+            padding: 20px 0;
+            box-shadow: 0 2px 15px rgba(93, 64, 55, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #D7CCC8;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logo:hover {
+            color: #FFFFFF;
+            transform: scale(1.05);
+        }
+
+        /* Logo  */
+        .logo-img {
+            height: 100px;
+            width: auto;
+            transition: all 0.3s ease;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo:hover .logo-img {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #8D6E63;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid #8D6E63;
+            background: #D7CCC8;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            background: #5D4037;
+            color: #FFFFFF;
+            border-color: #5D4037;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .success-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            font-size: 2.2rem;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        
+        .order-number {
+            font-size: 1.3rem;
+            color: #5D4037;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .order-number code {
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .pickup-info {
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .order-summary-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .summary-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #5D4037;
+        }
+        
+        .order-item {
+            display: grid;
+            grid-template-columns: 80px 1fr auto auto;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .order-item-name {
+            font-weight: bold;
+            color: #5D4037;
+        }
+        
+        .order-item-quantity {
+            text-align: center;
+            color: #666;
+        }
+        
+        .order-item-total {
+            font-weight: bold;
+            color: #8B4513;
+        }
+        
+        .order-total {
+            text-align: right;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #5D4037;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #5D4037;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-home {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-home:hover {
+            background: #545b62;
+            transform: translateY(-2px);
+        }
+        
+        .btn-shopping {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-shopping:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+        
+        .btn-pdf {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-pdf:hover {
+            background: #1e7e34;
+            transform: translateY(-2px);
+        }
+
+        .footer-contact {
+            background: #5D4037; 
+            padding: 50px 20px;
+            margin-top: 60px;
+        }
+        
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .contact-card {
+            background: #D7CCC8;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-color: #8D6E63;
+        }
+        
+        .contact-card.phone-card {
+            cursor: pointer;
+        }
+        
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #5D4037;
+        }
+        
+        .contact-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #5D4037; 
+            font-size: 1.2rem;
+        }
+        
+        .contact-detail {
+            color: #5D4037; 
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+            
+            .nav-links a {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .order-item {
+                grid-template-columns: 60px 1fr;
+                gap: 15px;
+            }
+            
+            .order-item-quantity, .order-item-total {
+                grid-column: 1 / -1;
+                text-align: left;
+                margin-top: 5px;
+            }
+        }
+    </style>
+    <!-- 引入 jsPDF 庫  for 最後整個pdf收據-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" onclick="goToHome()">
+            <img src="images/logo.png" alt="Bean Haven" class="logo-img" 
+                 onerror="this.style.display='none'; document.getElementById('logo-emoji').style.display='block';">
+            <span id="logo-emoji" style="display: none; font-size: 2.5rem;">☕</span>
+            <span class="logo-text">Bean Haven</span>
+        </div>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="#" onclick="loadProducts('classic'); return false;">Classic Series</a>
+            <a href="#" onclick="loadProducts('blend'); return false;">Blend Series</a>
+            <a href="#" onclick="loadProducts('flavor'); return false;">Flavor Series</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="success-section">
+            <div class="success-icon">✅</div>
+            <h1 class="success-title">Thank You for Your Purchase!</h1>
+            <div class="order-number" id="order-number-display">
+                Your order number is: <code id="order-code">Loading...</code>
+            </div>
+            <p class="pickup-info">
+                Please pick up your order in store.<br>
+                We do not offer delivery service at this time.
+            </p>
+        </div>
+
+        <div class="order-summary-container" id="receipt-content">
+            <h2 class="summary-title">Order Summary</h2>
+            <div id="order-items-container">
+                <div class="loading">Loading order details...</div>
+            </div>
+            <div class="order-total" id="order-total-display">
+                Total: $0.00
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-home" onclick="goToHome()">
+                🏠 Back to Home
+            </button>
+            <button class="btn btn-shopping" onclick="continueShopping()">
+                🛒 Continue Shopping
+            </button>
+            <button class="btn btn-pdf" onclick="generatePDF()">
+                📄 Save as PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="footer-contact">
+        <div class="contact-container">
+            <div class="contact-card" onclick="sendEmail()">
+                <div class="contact-icon">📧</div>
+                <div class="contact-title">Email Us</div>
+                <div class="contact-detail">hello@beanhaven.com</div>
+            </div>
+            
+            <div class="contact-card" onclick="openMap()">
+                <div class="contact-icon">🏪</div>
+                <div class="contact-title">Visit Us</div>
+                <div class="contact-detail">
+                    123 Coffee Street<br>
+                    Central District<br>
+                    Hong Kong
+                </div>
+            </div>
+            
+            <div class="contact-card phone-card" onclick="copyPhoneNumber()">
+                <div class="contact-icon">📞</div>
+                <div class="contact-title">Call Us</div>
+                <div class="contact-detail">+852 1234 5678</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let orderData = {
+            order_number: 'BN' + new Date().toISOString().slice(0,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 8).toUpperCase(),
+            items: [],
+            total: 0
+        };
+
+        function goToHome() {
+            window.location.href = 'home.php';
+        }
+
+        function continueShopping() {
+            window.location.href = 'product.html';
+        }
+
+
+        async function loadOrderDetails() {
+    try {
+        const customerPhone = sessionStorage.getItem('customerPhone');
+        const cartData = JSON.parse(sessionStorage.getItem('cartData') || '[]');
+        
+        if (!customerPhone || cartData.length === 0) {
+            showToast('No order data found. Please start from shopping cart.', true);
+            setTimeout(() => window.location.href = 'cart.html', 2000);
+            return;
+        }
+
+        orderData.items = cartData.map(item => ({
+            id: item.id,
+            name: item.name,
+            image: item.image_url || 'default.jpg',
+            price: parseFloat(item.price),
+            quantity: parseInt(item.qty)
+        }));
+
+        let subtotal = orderData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        let discount = subtotal > 500 ? subtotal * 0.15 : 0;
+        orderData.total = subtotal - discount;
+
+        orderData.order_number = 'BN' + Date.now().toString().slice(-8);
+        
+        document.getElementById('order-code').textContent = orderData.order_number;
+        displayOrderItems();
+        
+        await saveOrderToDatabase(customerPhone);
+        
+        showToast('Order completed successfully!');
+        
+    } catch (error) {
+        console.error('Error loading order details:', error);
+        showToast('Error loading order details', true);
+    }
+}
+
+async function saveOrderToDatabase(phoneNumber) {
+    try {
+        const orderPayload = {
+            order_number: orderData.order_number,
+            customer_phone: phoneNumber,
+            product_details: JSON.stringify(orderData.items),
+            total_amount: orderData.total.toFixed(2),
+            created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        };
+
+        console.log('Saving order:', orderPayload); // debug用
+
+        const response = await fetch('save_order.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderPayload)
+        });
+
+        const result = await response.json();
+        console.log('Save result:', result); // debug用
+        
+        if (result.status === 'success') {
+            console.log('Order saved to database successfully');
+            sessionStorage.removeItem('cartData');
+        } else {
+            console.error('Failed to save order to database:', result.message);
+            showToast('Order completed but failed to save record.', true);
+        }
+    } catch (error) {
+        console.error('Error saving order to database:', error);
+        showToast('Order completed but failed to save to database.', true);
+    }
+}
+
+    async function saveOrderToServer(phoneNumber) {
+        try {
+            const orderPayload = {
+                order_number: orderData.order_number,
+                customer_phone: phoneNumber,
+                product_details: JSON.stringify(orderData.items),
+                total_amount: orderData.total,
+                created_at: new Date().toISOString()
+            };
+
+            const response = await fetch('save_order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderPayload)
+            });
+
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                console.log('Order saved successfully');
+                // 清空
+                localStorage.removeItem('beanHavenCart');
+                sessionStorage.removeItem('customerPhone');
+            } else {
+                console.error('Failed to save order:', result.message);
+            }
+        } catch (error) {
+            console.error('Error saving order:', error);
+        }
+    }
+
+        function displayOrderItems() {
+            let html = '';
+            let calculatedTotal = 0;
+            
+            orderData.items.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                calculatedTotal += itemTotal;
+                
+                html += `
+                    <div class="order-item">
+                        <img src="images/${item.image}" alt="${item.name}" class="order-item-image" onerror="this.src='images/default.jpg'">
+                        <div class="order-item-name">${item.name}</div>
+                        <div class="order-item-quantity">Qty: ${item.quantity}</div>
+                        <div class="order-item-total">$${itemTotal.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('order-items-container').innerHTML = html;
+            document.getElementById('order-total-display').textContent = `Total: $${calculatedTotal.toFixed(2)}`;
+        }
+
+        async function generatePDF() {
+            try {
+                showToast('Generating PDF receipt...');
+                
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // PDF內容
+                doc.setFontSize(20);
+                doc.setTextColor(40, 167, 69);
+                doc.text('Bean Haven Coffee', 105, 20, { align: 'center' });
+                
+                doc.setFontSize(16);
+                doc.setTextColor(93, 64, 55);
+                doc.text('Order Receipt', 105, 35, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Order Number: ${orderData.order_number}`, 20, 50);
+                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 60);
+                doc.text(`Time: ${new Date().toLocaleTimeString()}`, 20, 70);
+                
+                let yPosition = 90;
+                doc.setFontSize(14);
+                doc.setTextColor(93, 64, 55);
+                doc.text('Items:', 20, yPosition);
+                yPosition += 10;
+                
+                orderData.items.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    doc.setFontSize(10);
+                    doc.text(`${item.name}`, 25, yPosition);
+                    doc.text(`Qty: ${item.quantity}`, 120, yPosition);
+                    doc.text(`$${itemTotal.toFixed(2)}`, 180, yPosition);
+                    yPosition += 8;
+                });
+                
+                yPosition += 10;
+                doc.setFontSize(12);
+                doc.setTextColor(93, 64, 55);
+                doc.text(`Total: $${orderData.total.toFixed(2)}`, 150, yPosition);
+                
+                yPosition += 20;
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Pickup Information:', 20, yPosition);
+                yPosition += 8;
+                doc.text('• Please bring this receipt for pickup', 25, yPosition);
+                yPosition += 8;
+                doc.text('• Store Address: 123 Coffee Street, Central District, Hong Kong', 25, yPosition);
+                yPosition += 8;
+                doc.text('• Opening Hours: Mon-Sun 10:00-20:00', 25, yPosition);
+                
+                doc.save(`BeanHaven_Receipt_${orderData.order_number}.pdf`);
+                showToast('PDF receipt downloaded successfully!');
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                showToast('Error generating PDF receipt', true);
+            }
+        }
+
+        function sendEmail() {
+            window.location.href = 'mailto:hello@beanhaven.com?subject=Order Inquiry - ' + orderData.order_number;
+        }
+        
+        function openMap() {
+            const address = '123+Coffee+Street+Central+District+Hong+Kong';
+            window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
+        }
+        
+        async function copyPhoneNumber() {
+            const phoneNumber = '+85212345678';
+            try {
+                await navigator.clipboard.writeText(phoneNumber);
+                showToast('Phone number copied to clipboard!');
+            } catch (err) {
+                const textArea = document.createElement('textarea');
+                textArea.value = phoneNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Phone number copied to clipboard!');
+            }
+        }
+        
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = isError ? '#dc3545' : '#28a745';
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadOrderDetails);
+    </script>
+</body>
+</html>

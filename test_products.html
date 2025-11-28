@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products API Test</title>
+    <style>
+        .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
+        .product-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; }
+        .product-card img { max-width: 100%; height: 150px; object-fit: cover; }
+        button { background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Products API Test</h1>
+    
+    <div>
+        <button onclick="loadProducts('classic')">Load Classic Series</button>
+        <button onclick="loadProducts('blend')">Load Blend Series</button>
+        <button onclick="loadProducts('flavor')">Load Flavor Series</button>
+    </div>
+
+    <div id="product-list" class="product-grid">
+        <!-- Products will be loaded here -->
+    </div>
+
+    <div id="result" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;"></div>
+
+    <script>
+        async function loadProducts(category) {
+            try {
+                document.getElementById('result').innerHTML = 'Loading...';
+                
+                const response = await fetch(`get_products.php?category=${category}`);
+                const products = await response.json();
+                
+                let html = '';
+                products.forEach(product => {
+                    html += `
+                        <div class="product-card">
+                            <img src="images/${product.image_url || 'default.jpg'}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                            <p><strong>Price: $${product.price}</strong></p>
+                            <button onclick="addToCart('${product.id}', '${product.name.replace(/'/g, "\\'")}', '${product.price}')">
+                                Add to Cart
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('product-list').innerHTML = html;
+                document.getElementById('result').innerHTML = `<strong>Success!</strong> Loaded ${products.length} products from ${category} series.`;
+                
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<strong>Error:</strong> ${error}`;
+            }
+        }
+
+        async function addToCart(productId, productName, productPrice) {
+            try {
+                const formData = new FormData();
+                formData.append('product_id', productId);
+                formData.append('product_name', productName);
+                formData.append('product_price', productPrice);
+                
+                const response = await fetch('add_to_cart.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                alert(result.message);
+                
+            } catch (error) {
+                alert('Error adding to cart: ' + error);
+            }
+        }
+
+        // Load classic products by default
+        loadProducts('classic');
+    </script>
+</body>
+</html>

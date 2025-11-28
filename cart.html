@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Bean Haven</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F5F5DC;
+            color: #5D4037;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: #5D4037;
+            padding: 20px 0;
+            box-shadow: 0 2px 15px rgba(93, 64, 55, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #D7CCC8;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logo:hover {
+            color: #FFFFFF;
+            transform: scale(1.05);
+        }
+
+        /* Logo  */
+        .logo-img {
+            height: 100px;
+            width: auto;
+            transition: all 0.3s ease;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo:hover .logo-img {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #8D6E63;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid #8D6E63;
+            background: #D7CCC8;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            background: #5D4037;
+            color: #FFFFFF;
+            border-color: #5D4037;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            text-align: center;
+            padding: 30px 0;
+            background: white;
+            margin-bottom: 30px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .steps {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            color: #5D4037;
+            font-size: 1.2rem;
+        }
+        
+        .step.active {
+            color: #28a745;
+        }
+        
+        .step.separator {
+            color: #666;
+        }
+        
+        .cart-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        .cart-items {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .cart-item {
+            display: grid;
+            grid-template-columns: 100px 1fr auto auto;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        
+        .item-details h3 {
+            margin-bottom: 5px;
+            color: #5D4037;
+        }
+        
+        .item-price {
+            color: #8B4513;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quantity-btn {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .quantity-btn:hover {
+            background: #f0f0f0;
+            border-color: #8B4513;
+        }
+        
+        .quantity-btn:disabled {
+            background: #f8f9fa;
+            color: #ccc;
+            cursor: not-allowed;
+            border-color: #eee;
+        }
+        
+        .quantity-btn:disabled:hover {
+            background: #f8f9fa;
+            border-color: #eee;
+        }
+        
+        .quantity {
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #5D4037;
+        }
+        
+        .item-total {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #5D4037;
+        }
+        
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            transition: all 0.3s;
+        }
+        
+        .remove-btn:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+        
+        .cart-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-continue {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-continue:hover {
+            background: #545b62;
+            transform: translateY(-2px);
+        }
+        
+        /* Order Summary */
+        .order-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .customer-info {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #5D4037;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #8B4513;
+            box-shadow: 0 0 5px rgba(139, 69, 19, 0.3);
+        }
+        
+        .summary-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #5D4037;
+            text-align: center;
+        }
+        
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            color: #5D4037;
+        }
+        
+        .discount {
+            color: #28a745;
+        }
+        
+        .final-total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #5D4037;
+            margin: 20px 0;
+        }
+        
+        .btn-checkout {
+            background: #28a745;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .btn-checkout:hover {
+            background: #1e7e34;
+            transform: translateY(-2px);
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-cart h3 {
+            margin-bottom: 10px;
+            color: #5D4037;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .auto-save-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+            border: 1px solid #bee5eb;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .auto-save-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer-contact {
+            background: #5D4037;
+            padding: 50px 20px;
+            margin-top: 60px;
+        }
+        
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .contact-card {
+            background: #D7CCC8;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-color: #8D6E63;
+        }
+        
+        .contact-card.phone-card {
+            cursor: pointer;
+        }
+        
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #5D4037; 
+        }
+        
+        .contact-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #5D4037; 
+            font-size: 1.2rem;
+        }
+        
+        .contact-detail {
+            color: #5D4037;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+            
+            .nav-links a {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .cart-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .cart-item {
+                grid-template-columns: 80px 1fr;
+                gap: 15px;
+            }
+            
+            .quantity-controls {
+                grid-column: 1 / -1;
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" onclick="goToHome()">
+            <img src="images/logo.png" alt="Bean Haven" class="logo-img" 
+                 onerror="this.style.display='none'; document.getElementById('logo-emoji').style.display='block';">
+            <span id="logo-emoji" style="display: none; font-size: 2.5rem;">☕</span>
+            <span class="logo-text">Bean Haven</span>
+        </div>
+    </nav>
+
+    <div class="progress-steps">
+        <div class="steps">
+            <span class="step active">Shopping Cart</span>
+            <span class="step separator">〉</span>
+            <span class="step">Order Complete</span>
+        </div>
+    </div>
+
+    <div class="cart-container">
+
+        <div class="cart-items">
+            <h2>Your Shopping Cart</h2>
+            <div id="cart-items-container">
+                <div class="loading">Loading cart...</div>
+            </div>
+
+            <div id="auto-save-message" class="auto-save-message"></div>
+            
+            <div class="nav-links">
+                <a href="product.html" onclick="loadProducts('flavor'); return false;">← Continue Shopping</a>
+            </div>
+        </div>
+
+        <div class="order-summary">
+            <h3 class="summary-title">Order Summary</h3>
+            <div class="summary-line">
+                <span>Subtotal:</span>
+                <span id="subtotal">$0.00</span>
+            </div>
+            <div class="customer-info">
+                <h4>Contact Information</h4>
+                <div class="form-group">
+                    <label for="customer-phone">Phone Number *</label>
+                    <input type="tel" id="customer-phone" placeholder="+852 1234 5678" required>
+                </div>
+            </div>
+            <div class="summary-line discount">
+                <span>Discount (15% off over $500):</span>
+                <span id="discount-amount">-$0.00</span>
+            </div>
+            <div class="summary-line final-total">
+                <span>Total:</span>
+                <span id="total-amount">$0.00</span>
+            </div>
+            <button class="btn btn-checkout" onclick="proceedToCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <div class="footer-contact">
+        <div class="contact-container">
+            <div class="contact-card" onclick="sendEmail()">
+                <div class="contact-icon">📧</div>
+                <div class="contact-title">Email Us</div>
+                <div class="contact-detail">hello@beanhaven.com</div>
+            </div>
+            
+            <div class="contact-card" onclick="openMap()">
+                <div class="contact-icon">🏪</div>
+                <div class="contact-title">Visit Us</div>
+                <div class="contact-detail">
+                    123 Coffee Street<br>
+                    Central District<br>
+                    Hong Kong
+                </div>
+            </div>
+
+            <div class="contact-card phone-card" onclick="copyPhoneNumber()">
+                <div class="contact-icon">📞</div>
+                <div class="contact-title">Call Us</div>
+                <div class="contact-detail">+852 1234 5678</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let cartData = [];
+
+        function goToHome() {
+            window.location.href = 'home.html';
+        }
+
+        async function loadCart() {
+            try {
+                const response = await fetch('get_cart.php');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result && Array.isArray(result.cart_items)) {
+                    cartData = result.cart_items;
+                    
+                    if (cartData.length === 0) {
+                        document.getElementById('cart-items-container').innerHTML = `
+                            <div class="empty-cart">
+                                <h3>Your cart is empty</h3>
+                                <p>Add some delicious coffee to get started!</p>
+                            </div>
+                        `;
+                        updateSummary(0, 0, 0);
+                    } else {
+                        displayCartItems();
+                    }
+                } else {
+                    throw new Error('Invalid cart data format');
+                }
+                
+            } catch (error) {
+                console.error('Error loading cart:', error);
+                document.getElementById('cart-items-container').innerHTML = `
+                    <div class="empty-cart">
+                        <h3>Error loading cart</h3>
+                        <p>Please try refreshing the page</p>
+                    </div>
+                `;
+            }
+        }
+
+        function displayCartItems() {
+            let html = '';
+            let subtotal = 0;
+            
+            cartData.forEach(item => {
+                const itemTotal = parseFloat(item.price) * parseInt(item.qty);
+                subtotal += itemTotal;
+                
+                html += `
+                    <div class="cart-item" data-id="${item.id}">
+                        <img src="images/${item.image_url || 'default.jpg'}" alt="${item.name}" class="item-image" onerror="this.src='images/default.jpg'">
+                        <div class="item-details">
+                            <h3>${item.name}</h3>
+                            <div class="item-price">$${parseFloat(item.price).toFixed(2)}</div>
+                            <button class="remove-btn" onclick="removeItem('${item.id}')">Remove</button>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="decreaseQuantity('${item.id}')" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
+                            <span class="quantity">${item.qty}</span>
+                            <button class="quantity-btn" onclick="increaseQuantity('${item.id}')">+</button>
+                        </div>
+                        <div class="item-total">$${itemTotal.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('cart-items-container').innerHTML = html;
+            calculateTotals(subtotal);
+        }
+
+        function calculateTotals(subtotal) {
+            let discount = 0;
+            
+            if (subtotal > 500) {
+                discount = subtotal * 0.15;
+            }
+            
+            const total = subtotal - discount;
+            
+            updateSummary(subtotal, discount, total);
+        }
+
+        function updateSummary(subtotal, discount, total = 0) {
+            const subtotalElement = document.getElementById('subtotal');
+            const discountElement = document.getElementById('discount-amount');
+            const totalElement = document.getElementById('total-amount');
+            
+            if (subtotalElement) subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+            if (discountElement) discountElement.textContent = `-$${discount.toFixed(2)}`;
+            if (totalElement) totalElement.textContent = `$${total.toFixed(2)}`;
+        }
+
+        async function increaseQuantity(productId) {
+            const item = cartData.find(item => item.id === productId);
+            if (item) {
+                item.qty = parseInt(item.qty) + 1;
+                displayCartItems(); 
+                await autoSaveCart(); 
+            }
+        }
+
+        async function decreaseQuantity(productId) {
+            const item = cartData.find(item => item.id === productId);
+            if (item && item.qty > 1) {
+                item.qty = parseInt(item.qty) - 1;
+                displayCartItems(); 
+                await autoSaveCart(); 
+            }
+        }
+
+        async function autoSaveCart() {
+            try {
+                const updateData = {
+                    action: 'update',
+                    items: cartData.map(item => ({
+                        id: item.id,
+                        quantity: item.qty
+                    }))
+                };
+
+                const response = await fetch('update_cart.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updateData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showAutoSaveMessage('Cart updated automatically');
+                } else {
+                    showAutoSaveMessage('Update failed', true);
+                }
+            } catch (error) {
+                console.error('Auto-save error:', error);
+                showAutoSaveMessage('Save failed', true);
+            }
+        }
+
+        async function removeItem(productId) {
+            if (confirm('Are you sure you want to remove this item from your cart?')) {
+                try {
+                    const formData = new FormData();
+                    formData.append('product_id', productId);
+                    formData.append('action', 'remove');
+                    
+                    const response = await fetch('update_cart.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        showAutoSaveMessage('Item removed');
+                        setTimeout(() => loadCart(), 500);
+                    } else {
+                        showAutoSaveMessage('Remove failed: ' + result.message, true);
+                    }
+                } catch (error) {
+                    console.error('Remove error:', error);
+                    showAutoSaveMessage('Remove failed', true);
+                }
+            }
+        }
+
+        function showAutoSaveMessage(message, isError = false) {
+            const messageElement = document.getElementById('auto-save-message');
+            messageElement.textContent = message;
+            messageElement.style.background = isError ? '#f8d7da' : '#d1ecf1';
+            messageElement.style.color = isError ? '#721c24' : '#0c5460';
+            messageElement.style.borderColor = isError ? '#f5c6cb' : '#bee5eb';
+            messageElement.classList.add('show');
+            
+            setTimeout(() => {
+                messageElement.classList.remove('show');
+            }, 2000);
+        }
+
+        function proceedToCheckout() {
+            if (cartData.length === 0) {
+                showToast('Your cart is empty. Please add items before checkout.');
+                return;
+            }
+            
+            const phoneInput = document.getElementById('customer-phone');
+            const phoneNumber = phoneInput ? phoneInput.value.trim() : '';
+            
+            if (!phoneNumber) {
+                showToast('Please enter your phone number to proceed.', true);
+                if (phoneInput) phoneInput.focus();
+                return;
+            }
+            
+            const phoneRegex = /^[0-9+\-\s()]{8,}$/;
+            if (!phoneRegex.test(phoneNumber)) {
+                showToast('Please enter a valid phone number (at least 8 digits).', true);
+                if (phoneInput) phoneInput.focus();
+                return;
+            }
+            
+            sessionStorage.setItem('customerPhone', phoneNumber);
+            
+            sessionStorage.setItem('cartData', JSON.stringify(cartData));
+            
+            window.location.href = 'checkout.html';
+        }
+
+        function sendEmail() {
+            window.location.href = 'mailto:hello@beanhaven.com?subject=Inquiry from Bean Haven Website';
+        }
+        
+        function openMap() {
+            const address = '123+Coffee+Street+Central+District+Hong+Kong';
+            window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
+        }
+        
+        async function copyPhoneNumber() {
+            const phoneNumber = '+85212345678';
+            try {
+                await navigator.clipboard.writeText(phoneNumber);
+                showToast('Phone number copied to clipboard!');
+            } catch (err) {
+                const textArea = document.createElement('textarea');
+                textArea.value = phoneNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Phone number copied to clipboard!');
+            }
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCart);
+    </script>
+</body>
+</html>
